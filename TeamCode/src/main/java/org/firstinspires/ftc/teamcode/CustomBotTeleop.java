@@ -55,7 +55,7 @@ public class CustomBotTeleop extends OpMode {
     @Override
     public void loop() {
         // Drive inputs
-        double x = gamepad2.right_stick_x * 0.6;
+        double x = -gamepad2.right_stick_x * 0.6;
         double y = gamepad2.left_stick_y  * 1.1;
         double rx= -gamepad2.left_stick_x;  // note: left stick x used for pivot when in pivot mode
 
