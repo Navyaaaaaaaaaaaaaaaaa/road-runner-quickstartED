@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
 import java.util.List;
 
 @TeleOp
@@ -39,10 +38,10 @@ public class CustomBotTeleop extends OpMode {
         shooterRight.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftFront .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftFront .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftBack  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightBack .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(4);
@@ -54,10 +53,12 @@ public class CustomBotTeleop extends OpMode {
 
     @Override
     public void loop() {
-        // Drive inputs
-        double x = -gamepad2.right_stick_x * 0.6;
-        double y = gamepad2.left_stick_y  * 1.1;
-        double rx= -gamepad2.left_stick_x;  // note: left stick x used for pivot when in pivot mode
+//        gamepad2.rumble(500000);
+
+
+        double x  = -gamepad2.right_stick_x * 1.1;
+        double y  =  gamepad2.left_stick_y * 1.1;
+        double rx = -gamepad2.left_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1.0);
         double frontLeftPower  = (y + x + rx) / denominator;
@@ -68,12 +69,11 @@ public class CustomBotTeleop extends OpMode {
         boolean tagDetected = false;
         double tx = 0.0;
 
-        if (gamepad2.left_trigger>0.1) {
+        if (gamepad2.left_trigger > 0.1) {
             // pivot-mode
             LLResult result = limelight.getLatestResult();
             if (result != null && result.isValid()) {
-                List<FiducialResult> frs = result.getFiducialResults();
-                for (FiducialResult fr : frs) {
+                for (FiducialResult fr : result.getFiducialResults()) {
                     if (fr.getFiducialId() == 20) {
                         tagDetected = true;
                         tx = fr.getTargetXDegrees();
@@ -83,58 +83,69 @@ public class CustomBotTeleop extends OpMode {
             }
 
             if (tagDetected) {
-                // Tag seen: lock pivot (do **not** allow left stick to pivot further)
-                leftFront .setPower(0);
-                leftBack  .setPower(0);
-                rightFront.setPower(0);
-                rightBack .setPower(0);
+                // lock pivot
+                setSafePower(leftFront,  0);
+                setSafePower(leftBack,   0);
+                setSafePower(rightFront, 0);
+                setSafePower(rightBack,  0);
                 telemetry.addLine("Tag20 detected — pivot locked");
                 telemetry.addData("tx", "%.2f", tx);
+
             } else {
-                // Tag not seen: allow pivot with left stick x
+                // allow pivot
                 double pivotPower = -gamepad2.right_stick_x * 0.8;
-                leftFront .setPower(pivotPower);
-                leftBack  .setPower(pivotPower);
-                rightFront.setPower(-pivotPower);
-                rightBack .setPower(-pivotPower);
+                setSafePower(leftFront,  pivotPower);
+                setSafePower(leftBack,   pivotPower);
+                setSafePower(rightFront, -pivotPower);
+                setSafePower(rightBack,  -pivotPower);
+
                 telemetry.addLine("Pivot mode: searching for Tag20");
                 telemetry.addData("leftStickX", "%.2f", gamepad2.left_stick_x);
             }
 
         } else {
-            // Normal full driving mode
-            leftFront .setPower(frontLeftPower);
-            leftBack  .setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightBack .setPower(backRightPower);
+            // normal drive
+            setSafePower(leftFront,  frontLeftPower);
+            setSafePower(leftBack,   backLeftPower);
+            setSafePower(rightFront, frontRightPower);
+            setSafePower(rightBack,  backRightPower);
         }
 
-        // Shooter control
-//        double shooterPower = gamepad1.left_trigger * -0.06;
-//        shooterLeft.setPower(shooterPower);
-//        shooterRight.setPower(shooterPower);
-
-        // Intake control
+        // Intake / Shooter with ramping
         if (gamepad1.b) {
-            intake.setPower(0.7);
+            setSafePower(shooterLeft, -0.3);
+            setSafePower(shooterRight, -0.3);
         } else if (gamepad1.right_trigger > 0.1) {
-            intake.setPower(-0.8);
+            setSafePower(intake, -0.8);
+            setSafePower(shooterLeft, 1);
+//            setSafePower(shooterRight, 1);
         } else if (gamepad1.a) {
-            intake.setPower(0.5);
+            setSafePower(intake, -0.5);
         } else if (gamepad1.dpad_up) {
-            intake.setPower(1.0);
-        } else if(gamepad1.left_trigger>0.1){
-            shooterLeft.setPower(-0.5);
-            shooterRight.setPower(-0.5);
-        } else if(gamepad1.left_bumper){
-            shooterLeft.setPower(-1);
-            shooterRight.setPower(-1);
+            setSafePower(intake, 1.0);
+        } else if (gamepad1.left_trigger > 0.1) {
+            setSafePower(shooterLeft, -0.67);
+            setSafePower(shooterRight, -0.67);
+            setSafePower(intake, 0);
+        } else if (gamepad1.left_bumper) {
+            setSafePower(shooterLeft, -1);
+            setSafePower(shooterRight, -1);
+            setSafePower(intake, 0);
         } else {
-            intake.setPower(0);
-            shooterLeft.setPower(0);
-            shooterRight.setPower((0));
+            setSafePower(intake, 0);
+            setSafePower(shooterLeft, 0);
+            setSafePower(shooterRight, 0);
         }
 
         telemetry.update();
+    }
+
+    // SLEW RATE CONTROL
+    void setSafePower(DcMotor motor, double targetPower) {
+        final double SLEW_RATE = 0.2;
+        double currentPower = motor.getPower();
+        double desired = targetPower - currentPower;
+        double limited = Math.max(-SLEW_RATE, Math.min(desired, SLEW_RATE));
+        motor.setPower(currentPower + limited);
     }
 }
