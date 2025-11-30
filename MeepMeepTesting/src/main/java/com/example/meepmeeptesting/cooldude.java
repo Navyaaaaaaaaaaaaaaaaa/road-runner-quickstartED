@@ -12,25 +12,25 @@ public class cooldude {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(-135), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-57, -44, 0))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(56, -10, 0))
 
 
                 .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-130))
-                .strafeToLinearHeading(new Vector2d(-12, -31), Math.toRadians(-90))
-                .strafeTo(new Vector2d(-12, -39))
-                .strafeTo(new Vector2d(-12, -47))
-                .strafeToLinearHeading(new Vector2d(-45, -25), Math.toRadians(-130))
+                .strafeToLinearHeading(new Vector2d(-9, -31), Math.toRadians(-90))
+                .strafeTo(new Vector2d(-9, -39))
+                .strafeTo(new Vector2d(-9, -47))
+                .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-130))
                 .strafeToLinearHeading(new Vector2d(12, -31), Math.toRadians(-90))
                 .strafeTo(new Vector2d(12, -39))
                 .strafeTo(new Vector2d(12, -47))
-                .strafeToLinearHeading(new Vector2d(-45, -25), Math.toRadians(-130))
+                .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-130))
                 .strafeToLinearHeading(new Vector2d(35, -31), Math.toRadians(-90))
                 .strafeTo(new Vector2d(35, -39))
                 .strafeTo(new Vector2d(35, -48))
-                .strafeToLinearHeading(new Vector2d(-45, -25), Math.toRadians(-130))
+                .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-130))
 
                 .build()
 

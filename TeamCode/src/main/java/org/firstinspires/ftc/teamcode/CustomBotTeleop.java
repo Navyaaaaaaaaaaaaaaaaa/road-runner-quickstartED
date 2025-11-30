@@ -38,10 +38,10 @@ public class CustomBotTeleop extends OpMode {
         shooterRight.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
-//        leftFront .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        leftBack  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightBack .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(4);
@@ -53,7 +53,6 @@ public class CustomBotTeleop extends OpMode {
 
     @Override
     public void loop() {
-//        gamepad2.rumble(500000);
 
 
         double x  = -gamepad2.right_stick_x * 1.1;
@@ -70,7 +69,7 @@ public class CustomBotTeleop extends OpMode {
         double tx = 0.0;
 
         if (gamepad2.left_trigger > 0.1) {
-            // pivot-mode
+
             LLResult result = limelight.getLatestResult();
             if (result != null && result.isValid()) {
                 for (FiducialResult fr : result.getFiducialResults()) {
@@ -83,7 +82,7 @@ public class CustomBotTeleop extends OpMode {
             }
 
             if (tagDetected) {
-                // lock pivot
+
                 setSafePower(leftFront,  0);
                 setSafePower(leftBack,   0);
                 setSafePower(rightFront, 0);
@@ -92,7 +91,7 @@ public class CustomBotTeleop extends OpMode {
                 telemetry.addData("tx", "%.2f", tx);
 
             } else {
-                // allow pivot
+
                 double pivotPower = -gamepad2.right_stick_x * 0.8;
                 setSafePower(leftFront,  pivotPower);
                 setSafePower(leftBack,   pivotPower);
@@ -104,23 +103,20 @@ public class CustomBotTeleop extends OpMode {
             }
 
         } else {
-            // normal drive
+
             setSafePower(leftFront,  frontLeftPower);
             setSafePower(leftBack,   backLeftPower);
             setSafePower(rightFront, frontRightPower);
             setSafePower(rightBack,  backRightPower);
         }
 
-        // Intake / Shooter with ramping
-        if (gamepad1.b) {
-            setSafePower(shooterLeft, -0.3);
-            setSafePower(shooterRight, -0.3);
-        } else if (gamepad1.right_trigger > 0.1) {
+
+        if (gamepad1.right_trigger > 0.1) {
             setSafePower(intake, -0.8);
-            setSafePower(shooterLeft, 1);
-//            setSafePower(shooterRight, 1);
+            setSafePower(shooterLeft, 0.5);
+            setSafePower(shooterRight, 0.5);
         } else if (gamepad1.a) {
-            setSafePower(intake, -0.5);
+            setSafePower(intake, -1);
         } else if (gamepad1.dpad_up) {
             setSafePower(intake, 1.0);
         } else if (gamepad1.left_trigger > 0.1) {
@@ -140,7 +136,6 @@ public class CustomBotTeleop extends OpMode {
         telemetry.update();
     }
 
-    // SLEW RATE CONTROL
     void setSafePower(DcMotor motor, double targetPower) {
         final double SLEW_RATE = 0.2;
         double currentPower = motor.getPower();
