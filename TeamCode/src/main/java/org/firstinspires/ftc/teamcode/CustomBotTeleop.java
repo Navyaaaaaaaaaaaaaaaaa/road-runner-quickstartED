@@ -113,15 +113,15 @@ public class CustomBotTeleop extends OpMode {
 
         if (gamepad1.right_trigger > 0.1) {
             setSafePower(intake, -0.8);
-            setSafePower(shooterLeft, 0.5);
-            setSafePower(shooterRight, 0.5);
+            setSafePower(shooterLeft, 0.7);
+            setSafePower(shooterRight, 0.7);
         } else if (gamepad1.a) {
             setSafePower(intake, -1);
         } else if (gamepad1.dpad_up) {
             setSafePower(intake, 1.0);
         } else if (gamepad1.left_trigger > 0.1) {
-            setSafePower(shooterLeft, -0.67);
-            setSafePower(shooterRight, -0.67);
+            setSafePower(shooterLeft, -0.55);
+            setSafePower(shooterRight, -0.55);
             setSafePower(intake, 0);
         } else if (gamepad1.left_bumper) {
             setSafePower(shooterLeft, -1);
