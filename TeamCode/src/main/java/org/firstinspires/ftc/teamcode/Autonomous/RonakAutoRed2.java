@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
-@Autonomous(name = "RonakAuto1")
-public class RonakAuto1 extends LinearOpMode {
+@Autonomous(name = "RonakAutoRed2")
+public class RonakAutoRed2 extends LinearOpMode {
 
     private DcMotor shooterLeft, shooterRight;
     private DcMotor intake;
@@ -35,7 +35,7 @@ public class RonakAuto1 extends LinearOpMode {
 
 
 
-        Pose2d beginPose = new Pose2d(-57, -44, Math.toRadians(-135));
+        Pose2d beginPose = new Pose2d(60, -10, Math.toRadians(-180));
 
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
@@ -46,61 +46,61 @@ public class RonakAuto1 extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        //preload shooting ------------------------------------------------------------------
+                        // shooting ----------------------------------------------------------------
                         .afterTime(Math.max(0, EST_TRAVEL_SEC-2.5), startShooter())
-                        .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-121))
+                        .strafeToLinearHeading(new Vector2d(-40, 25), Math.toRadians(121))
                         .afterTime(1,startIntake())
                         .waitSeconds(3)
-                        .afterTime(0.5,stopShooter())
+                        .afterTime(1.5,stopShooter())
 
-                        //cycle 1 ------------------------------------------------------------------
+                        //1st cycle ----------------------------------------------------------------
 
-                        .strafeToLinearHeading(new Vector2d(-8, -26), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-8, 26), Math.toRadians(90))
                         .afterTime(0,startIntake())
                         .afterTime(0,startRevShooter())
                         .waitSeconds(0.5)
-                        .strafeTo(new Vector2d(-8, -39))
-                        .strafeTo(new Vector2d(-8, -56))
+                        .strafeTo(new Vector2d(-8, 39))
+                        .strafeTo(new Vector2d(-8, 56))
                         .afterTime(1,stopIntake())
                         .afterTime(0,stopShooter())
                         .afterTime(Math.max(0, EST_TRAVEL_SEC-1.5), startPowerShooter())
-                        .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-121))
+                        .strafeToLinearHeading(new Vector2d(-40, 25), Math.toRadians(121))
                         .waitSeconds(1)
                         .afterTime(0.5,startIntake())
                         .waitSeconds(3)
                         .afterTime(0.5,stopShooter())
                         .afterTime(0,stopIntake())
 
-                        //cycle2---------------------------------------------------------------------
+                        //2nd cycle ----------------------------------------------------------------
 
-                        .strafeToLinearHeading(new Vector2d(12, -26), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(12, 26), Math.toRadians(90))
                         .afterTime(0,startIntake())
                         .afterTime(0,startRevShooter())
                         .waitSeconds(0.5)
-                        .strafeTo(new Vector2d(12, -39))
-                        .strafeTo(new Vector2d(12, -56))
+                        .strafeTo(new Vector2d(12, 39))
+                        .strafeTo(new Vector2d(12, 56))
                         .afterTime(1,stopIntake())
                         .afterTime(0,stopShooter())
                         .afterTime(Math.max(0, EST_TRAVEL_SEC-1.5), startShooter())
-                        .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-121))
+                        .strafeToLinearHeading(new Vector2d(-40, 25), Math.toRadians(121))
                         .waitSeconds(2.5)
                         .afterTime(0.5,startIntake())
                         .waitSeconds(3)
                         .afterTime(0.5,stopShooter())
                         .afterTime(0,stopIntake())
 
-                        //cycle3---------------------------------------------------------------------
+                        //3rd cycle ----------------------------------------------------------------
 
-                        .strafeToLinearHeading(new Vector2d(35, -26), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(35, -26), Math.toRadians(90))
                         .afterTime(0,startIntake())
                         .afterTime(0,startRevShooter())
                         .waitSeconds(0.5)
-                        .strafeTo(new Vector2d(35, -39))
-                        .strafeTo(new Vector2d(35, -56))
+                        .strafeTo(new Vector2d(35, 39))
+                        .strafeTo(new Vector2d(35, 56))
                         .afterTime(1,stopIntake())
                         .afterTime(0,stopShooter())
                         .afterTime(Math.max(0, EST_TRAVEL_SEC-1.5), startShooter())
-                        .strafeToLinearHeading(new Vector2d(-40, -25), Math.toRadians(-121))
+                        .strafeToLinearHeading(new Vector2d(-40, 25), Math.toRadians(121))
                         .waitSeconds(2.5)
                         .afterTime(0.5,startIntake())
                         .waitSeconds(3)
@@ -135,8 +135,8 @@ public class RonakAuto1 extends LinearOpMode {
 
     private Action startRevShooter() {
         return telemetryPacket -> {
-            shooterLeft.setPower(0.8);
-            shooterRight.setPower(0.8) ;
+            shooterLeft.setPower(0.98);
+            shooterRight.setPower(0.98) ;
             return false;
         };
     }
