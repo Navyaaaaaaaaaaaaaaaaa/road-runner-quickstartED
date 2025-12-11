@@ -17,8 +17,9 @@ public class cooldude2 {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, -10, Math.toRadians(-180)))
 
+                .strafeToLinearHeading(new Vector2d(55,-9),Math.toRadians(-160))
+                .strafeToLinearHeading(new Vector2d(60, -50), Math.toRadians(-90))
 
-                .strafeToLinearHeading(new Vector2d(30, -10), Math.toRadians(-180))
 
                 .build()
 

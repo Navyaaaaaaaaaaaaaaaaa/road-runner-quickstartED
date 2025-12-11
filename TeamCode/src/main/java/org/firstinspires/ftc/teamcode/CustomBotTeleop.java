@@ -61,7 +61,7 @@ public class CustomBotTeleop extends OpMode {
     public void loop() {
 
 
-        double x = -gamepad2.right_stick_x * 1.1;
+        double x = -gamepad2.right_stick_x * 0.7;
         double y = gamepad2.left_stick_y * 1.1;
         double rx = -gamepad2.left_stick_x;
 
@@ -126,8 +126,8 @@ public class CustomBotTeleop extends OpMode {
         } else if (gamepad1.dpad_up) {
             setSafePower(intake, 1.0);
         } else if (gamepad1.left_trigger > 0.1) {
-            setSafePower(shooterLeft, -0.55);
-            setSafePower(shooterRight, -0.55);
+            setSafePower(shooterLeft, -0.48);
+            setSafePower(shooterRight, -0.48);
             runbackwards();
             setSafePower(intake, 0);
         } else if (gamepad1.left_bumper) {
