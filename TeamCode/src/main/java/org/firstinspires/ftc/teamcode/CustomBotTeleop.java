@@ -104,7 +104,7 @@ public class CustomBotTeleop extends OpMode {
 
         if (gamepad1.right_trigger > 0.1) {
             setSafePower(intake, -0.6);
-            hardstop.setPosition(0.4);
+            hardstop.setPosition(0.3);
         } else if (gamepad1.a) {
             setSafePower(intake, -0.75);
         } else if (gamepad1.dpad_up) {
